@@ -55,6 +55,7 @@ const (
 	KEYWORDS_ELSE     // else
 	KEYWORDS_RETURN   // return
 	KEYWORDS_VAR      // let
+	KEYWORDS_CONST    // const
 	KEYWORDS_SWITCH   // switch
 	KEYWORDS_FOR      // for
 	KEYWORDS_CASE     // case
@@ -81,6 +82,7 @@ func ToKeywords(value string) TokenType {
 		"function": KEYWORDS_FUNCTION,
 		"if":       KEYWORDS_IF,
 		"let":      KEYWORDS_VAR,
+		"const":    KEYWORDS_CONST,
 		"else":     KEYWORDS_ELSE,
 		"return":   KEYWORDS_RETURN,
 		"for":      KEYWORDS_FOR,

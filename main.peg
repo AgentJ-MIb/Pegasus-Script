@@ -1,1 +1,8 @@
 let x: int = 10;
+let x: int = 10;
+let x: int = 10;
+
+const (
+    y: float = 10.0;
+    z: int = 1000;
+)
