@@ -1,8 +1,5 @@
-let x: int = 10;
-let x: int = 10;
-let x: int = 10;
+function add(x: int, y: int) {
+    return x + y;
+}
 
-const (
-    y: float = 10.0;
-    z: int = 1000;
-)
+puts(add(5, 5));

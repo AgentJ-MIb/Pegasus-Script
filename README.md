@@ -38,7 +38,7 @@ To run your script, use the following command:
 Pegaus Script is designed to be easy to learn and use. Here are some basic commands and their usage:
 
 - `puts("Hello, world!");`: Prints a message to the standard output.
-- `var x: int = 10;` Declares a variable `x` and assigns it the value of `int 10`.
+- `let x: int = 10;` Declares a variable `x` and assigns it the value of `int 10`.
 - `if (condition) { ... }`: Executes a block of code if the condition is true.
 
 For a more indepth tutorial, refer to the [official documentation](#)
@@ -53,13 +53,13 @@ Here are some examples to help you get started with Pegasus Script:
 
 - **Variable Declaration and Printing**:
     ```
-    var name: string = "Alice";
+    let name: string = "Alice";
     puts("Hello, " + name + "!");
     ```
 
 - **Conditional Statements**:
     ```
-    var age: int = 25;
+    let age: int = 25;
     if (age >= 18) {
         puts("You are an adult.");
     } else {
