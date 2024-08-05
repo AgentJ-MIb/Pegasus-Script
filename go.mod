@@ -1,3 +1,3 @@
-module PegasusScript
+module plutonium
 
 go 1.21

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"PegasusScript/lexer"
-	"PegasusScript/token"
+	"plutonium/lexer"
+	"plutonium/token"
 )
 
 func main() {

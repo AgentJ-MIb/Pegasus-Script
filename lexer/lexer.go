@@ -1,8 +1,8 @@
 package lexer
 
 import (
-	"PegasusScript/token"
 	"log"
+	"plutonium/token"
 )
 
 type Lexer struct {
