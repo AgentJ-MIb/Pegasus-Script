@@ -26,7 +26,7 @@ To install plutonium, follow these steps:
 5. The executable will be located in the current directory. You can move it to a directory in your PATH for easier access.
 
 ## Getting Started
-To start using Plutonium, you need to create a script file with the `.plm` extension. Here's a simple example to get you started:
+To start using Plutonium, you need to create a script file with the `.ptn` extension. Here's a simple example to get you started:
 ```
 # This is a comment in Plutonium
 puts("Hello, world");
