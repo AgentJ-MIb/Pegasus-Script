@@ -37,12 +37,12 @@ func (lexer *Lexer) readString() string {
 	for {
 		lexer.readChar()
 		if lexer.Char == '"' {
-      break
-    }
+			break
+		}
 	}
-  str := lexer.Content[position:lexer.Position]
-  lexer.readChar()
-  return str
+	str := lexer.Content[position:lexer.Position]
+	lexer.readChar()
+	return str
 }
 
 func (lexer *Lexer) readChar() {
@@ -204,24 +204,24 @@ func (lexer *Lexer) Consume() token.Token {
 		tok.Literal = "EOF"
 		tok.Type = token.EOF
 	default:
-    switch {
-    case isAlpha(lexer.Char):
-      tok.Literal = lexer.readIdentifier()
-      tok.Type = token.ToKeywords(tok.Literal)
-      return tok
-    case isDigit(lexer.Char):
-      literal, isFloat := lexer.readNumber()
-      tok.Literal = literal
-      tok.Type = token.TYPE_INT
-      if isFloat {
-        tok.Type = token.TYPE_FLOAT
-        return tok
-      }
-      return tok
-    default:
-      log.Fatalln("Illegal Token")
-    }
-  }
+		switch {
+		case isAlpha(lexer.Char):
+			tok.Literal = lexer.readIdentifier()
+			tok.Type = token.ToKeywords(tok.Literal)
+			return tok
+		case isDigit(lexer.Char):
+			literal, isFloat := lexer.readNumber()
+			tok.Literal = literal
+			tok.Type = token.TYPE_INT
+			if isFloat {
+				tok.Type = token.TYPE_FLOAT
+				return tok
+			}
+			return tok
+		default:
+			log.Fatalln("Illegal Token")
+		}
+	}
 
 	lexer.readChar()
 	return tok
