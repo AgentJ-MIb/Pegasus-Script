@@ -1,8 +1,10 @@
 package lexer
 
 import (
-	"log"
+	"fmt"
+	"plutonium/inc"
 	"plutonium/token"
+	"strings"
 )
 
 type Lexer struct {
@@ -10,6 +12,46 @@ type Lexer struct {
 	Position     int
 	ReadPosition int
 	Char         byte
+	Line         int
+	Column       int
+}
+
+func (lexer *Lexer) lineContent(line int) string {
+	if line < 1 {
+		return ""
+	}
+
+	start := 0
+	for i := 1; i < line; i++ {
+		start = strings.Index(lexer.Content[start:], "\n")
+		if start == -1 {
+			return ""
+		}
+		start += len("\n")
+	}
+
+	end := strings.Index(lexer.Content[start:], "\n")
+	if end == -1 {
+		end = len(lexer.Content)
+	} else {
+		end += start
+	}
+
+	return lexer.Content[start:end]
+}
+
+func error(lexer *Lexer, char byte) {
+	lineContent := lexer.lineContent(lexer.Line)
+
+	fmt.Printf(inc.Red+"Error"+inc.Reset+": [line: "+inc.Blue+"%d"+inc.Reset+", column: "+inc.Cyan+"%d"+inc.Reset+"] "+inc.Yellow+"Unexpected character '%c'\n"+inc.Reset, lexer.Line, lexer.Column, char)
+
+	fmt.Printf(" %d | %s\n", lexer.Line, lineContent)
+	caretPosition := lexer.Column - 1
+	if caretPosition < 0 {
+		caretPosition = 0
+	}
+	fmt.Printf("   | %s^\n", strings.Repeat(" ", caretPosition))
+	lexer.readChar()
 }
 
 func isDigit(char byte) bool {
@@ -29,6 +71,7 @@ func (lexer *Lexer) skipWhiteSpace() {
 func New(input string) *Lexer {
 	lexer := &Lexer{Content: input}
 	lexer.readChar()
+	lexer.Line = 1
 	return lexer
 }
 
@@ -52,8 +95,15 @@ func (lexer *Lexer) readChar() {
 		lexer.Char = lexer.Content[lexer.ReadPosition]
 	}
 
+	if lexer.Char == '\n' {
+		lexer.Line++
+		lexer.Column = 0
+	} else {
+		lexer.Column++
+	}
+
 	lexer.Position = lexer.ReadPosition
-	lexer.ReadPosition += 1
+	lexer.ReadPosition++
 }
 
 func (lexer *Lexer) readIdentifier() string {
@@ -219,7 +269,8 @@ func (lexer *Lexer) Consume() token.Token {
 			}
 			return tok
 		default:
-			log.Fatalln("Illegal Token")
+			tok = newToken(token.ERROR, lexer.Char)
+			error(lexer, lexer.Char)
 		}
 	}
 

@@ -1,5 +1,0 @@
-function add(x: int, y: int) {
-    return x + y;
-}
-
-puts(add(5, 5));

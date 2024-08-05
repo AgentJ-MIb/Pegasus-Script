@@ -32,10 +32,10 @@ To start using Plutonium, you need to create a script file with the `.plm` exten
 puts("Hello, world");
 ```
 To run your script, use the following command:
-`./main main.plm`
+`./main main.ptn`
 
 ## Usage
-Pegaus Script is designed to be easy to learn and use. Here are some basic commands and their usage:
+Plutonium is designed to be easy to learn and use. Here are some basic commands and their usage:
 
 - `puts("Hello, world!");`: Prints a message to the standard output.
 - `let x: int = 10;` Declares a variable `x` and assigns it the value of `int 10`.

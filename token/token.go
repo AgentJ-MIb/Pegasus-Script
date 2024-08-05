@@ -10,6 +10,7 @@ type Token struct {
 const (
 	EOF TokenType = iota
 
+	ERROR    // Err
 	MINUS    // -
 	PLUS     // +
 	MULTIPLY // *
