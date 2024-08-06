@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"plutonium/lexer"
-	"plutonium/token"
 )
 
 func main() {
@@ -27,12 +26,12 @@ func main() {
 		return
 	}
 
-	lexer := lexer.New(string(content))
+	lexerNew := lexer.New(string(content))
 
 	for {
-		tok := lexer.Consume()
+		tok := lexerNew.Consume()
 		fmt.Printf("{Token Type: %v, Value: %v}\n", tok.Type, tok.Literal)
-		if tok.Type == token.EOF {
+		if tok.Type == lexer.EOF {
 			break
 		}
 	}

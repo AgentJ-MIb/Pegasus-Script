@@ -1,4 +1,4 @@
-package token
+package lexer
 
 type TokenType int
 
@@ -68,31 +68,3 @@ const (
 	KEYWORDS_IMPORT   // import
 
 )
-
-func ToKeywords(value string) TokenType {
-	keys := map[string]TokenType{
-		"int":      TYPE_INT,
-		"float":    TYPE_FLOAT,
-		"bool":     TYPE_BOOLEAN,
-		"string":   TYPE_STRING,
-		"try":      KEYWORDS_TRY,
-		"catch":    KEYWORDS_CATCH,
-		"import":   KEYWORDS_IMPORT,
-		"true":     KEYWORDS_TRUE,
-		"false":    KEYWORDS_FALSE,
-		"function": KEYWORDS_FUNCTION,
-		"if":       KEYWORDS_IF,
-		"let":      KEYWORDS_VAR,
-		"const":    KEYWORDS_CONST,
-		"else":     KEYWORDS_ELSE,
-		"return":   KEYWORDS_RETURN,
-		"for":      KEYWORDS_FOR,
-		"switch":   KEYWORDS_SWITCH,
-		"case":     KEYWORDS_CASE,
-		"default":  KEYWORDS_DEFAULT,
-	}
-	if val, ok := keys[value]; ok {
-		return val
-	}
-	return IDENTIFIER
-}
