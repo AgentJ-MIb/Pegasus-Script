@@ -17,26 +17,19 @@ type Lexer struct {
 }
 
 func (lexer *Lexer) lineContent(line int) string {
-	if line < 1 {
-		return ""
-	}
-
 	start := 0
-	for i := 1; i < line; i++ {
-		start = strings.Index(lexer.Content[start:], "\n")
-		if start == -1 {
-			return ""
+	cLine := 1
+
+	for cLine != line && start < len(lexer.Content) {
+		if lexer.Content[start] == '\n' {
+			cLine++
 		}
-		start += len("\n")
+		start++
 	}
-
-	end := strings.Index(lexer.Content[start:], "\n")
-	if end == -1 {
-		end = len(lexer.Content)
-	} else {
-		end += start
+	end := start
+	for end < len(lexer.Content) && lexer.Content[end] != '\n' {
+		end++
 	}
-
 	return lexer.Content[start:end]
 }
 
