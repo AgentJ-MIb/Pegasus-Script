@@ -15,7 +15,7 @@ type Lexer struct {
 	Column       int
 }
 
-func (lexer *Lexer) lineContent(line int) string {
+func (lexer *Lexer) LineContent(line int) string {
 	start := 0
 	cLine := 1
 
@@ -32,8 +32,8 @@ func (lexer *Lexer) lineContent(line int) string {
 	return lexer.Content[start:end]
 }
 
-func error(lexer *Lexer, char byte) {
-	lineContent := lexer.lineContent(lexer.Line)
+func Error(lexer *Lexer, char byte) {
+	lineContent := lexer.LineContent(lexer.Line)
 
 	fmt.Printf(inc.Red+"Error"+inc.Reset+": [line: "+inc.Blue+"%d"+inc.Reset+", column: "+inc.Cyan+"%d"+inc.Reset+"] "+inc.Yellow+"Unexpected character '%c'\n"+inc.Reset, lexer.Line, lexer.Column, char)
 
@@ -43,44 +43,44 @@ func error(lexer *Lexer, char byte) {
 		caretPosition = 0
 	}
 	fmt.Printf("   | %s^\n", strings.Repeat(" ", caretPosition))
-	lexer.readChar()
+	lexer.ReadChar()
 }
 
-func isDigit(char byte) bool {
+func IsDigit(char byte) bool {
 	return char >= '0' && char <= '9'
 }
 
-func isAlpha(char byte) bool {
+func IsAlpha(char byte) bool {
 	return char >= 'a' && char <= 'z' || char >= 'A' && char <= 'Z' || char == '_' || char == '$'
 }
 
-func (lexer *Lexer) skipWhiteSpace() {
+func (lexer *Lexer) SkipWhiteSpace() {
 	for lexer.Char == ' ' || lexer.Char == '\t' || lexer.Char == '\n' || lexer.Char == '\r' || lexer.Char == '#' {
-		lexer.readChar()
+		lexer.ReadChar()
 	}
 }
 
 func New(input string) *Lexer {
 	lexer := &Lexer{Content: input}
-	lexer.readChar()
+	lexer.ReadChar()
 	lexer.Line = 1
 	return lexer
 }
 
-func (lexer *Lexer) readString() string {
+func (lexer *Lexer) ReadString() string {
 	position := lexer.Position + 1
 	for {
-		lexer.readChar()
+		lexer.ReadChar()
 		if lexer.Char == '"' {
 			break
 		}
 	}
 	str := lexer.Content[position:lexer.Position]
-	lexer.readChar()
+	lexer.ReadChar()
 	return str
 }
 
-func (lexer *Lexer) readChar() {
+func (lexer *Lexer) ReadChar() {
 	if lexer.ReadPosition >= len(lexer.Content) {
 		lexer.Char = 0
 	} else {
@@ -98,10 +98,10 @@ func (lexer *Lexer) readChar() {
 	lexer.ReadPosition++
 }
 
-func (lexer *Lexer) readIdentifier() string {
+func (lexer *Lexer) ReadIdentifier() string {
 	pos := lexer.Position
-	for isAlpha(lexer.Char) {
-		lexer.readChar()
+	for IsAlpha(lexer.Char) {
+		lexer.ReadChar()
 	}
 
 	return lexer.Content[pos:lexer.Position]
@@ -110,20 +110,20 @@ func (lexer *Lexer) readIdentifier() string {
 func (lexer *Lexer) readNumber() (string, bool) {
 	position := lexer.Position
 	isFloat := false
-	for isDigit(lexer.Char) {
-		lexer.readChar()
+	for IsDigit(lexer.Char) {
+		lexer.ReadChar()
 	}
 	if lexer.Char == '.' {
-		lexer.readChar()
-		for isDigit(lexer.Char) {
-			lexer.readChar()
+		lexer.ReadChar()
+		for IsDigit(lexer.Char) {
+			lexer.ReadChar()
 		}
 		isFloat = true
 	}
 	return lexer.Content[position:lexer.Position], isFloat
 }
 
-func (lexer *Lexer) peek() byte {
+func (lexer *Lexer) Peek() byte {
 	if lexer.ReadPosition >= len(lexer.Content) {
 		return 0
 	}
@@ -131,7 +131,7 @@ func (lexer *Lexer) peek() byte {
 	return lexer.Content[lexer.ReadPosition]
 }
 
-func newToken(tokenType TokenType, char byte) Token {
+func NewToken(tokenType TokenType, char byte) Token {
 	return Token{
 		Type:    tokenType,
 		Literal: string(char),
@@ -139,7 +139,7 @@ func newToken(tokenType TokenType, char byte) Token {
 }
 
 func (lexer *Lexer) Consume() Token {
-	lexer.skipWhiteSpace()
+	lexer.SkipWhiteSpace()
 
 	var tok Token
 
@@ -150,25 +150,25 @@ func (lexer *Lexer) Consume() Token {
 	if tokenType := GetOperatorType(lexer.Char); tokenType != ERROR {
 		if tokenType == TYPE_STRING {
 			tok.Type = TYPE_STRING
-			tok.Literal = lexer.readString()
+			tok.Literal = lexer.ReadString()
 			return tok
 		}
-		tok = newToken(tokenType, lexer.Char)
-		if lexer.peek() == '=' {
-			lexer.readChar()
+		tok = NewToken(tokenType, lexer.Char)
+		if lexer.Peek() == '=' {
+			lexer.ReadChar()
 			tok.Type = GetAssignmentType(lexer.Char)
-			tok.Literal = TokenTypeToString(tok.Type) // This will use the TokenTypeToString function
+			tok.Literal = TokenTypeToString(tok.Type)
 		}
-		lexer.readChar()
+		lexer.ReadChar()
 		return tok
 	}
 
 	switch {
-	case isAlpha(lexer.Char):
-		tok.Literal = lexer.readIdentifier()
+	case IsAlpha(lexer.Char):
+		tok.Literal = lexer.ReadIdentifier()
 		tok.Type = ToKeywords(tok.Literal)
 		return tok
-	case isDigit(lexer.Char):
+	case IsDigit(lexer.Char):
 		literal, isFloat := lexer.readNumber()
 		tok.Literal = literal
 		tok.Type = TYPE_INT
@@ -178,10 +178,10 @@ func (lexer *Lexer) Consume() Token {
 		}
 		return tok
 	default:
-		tok = newToken(ERROR, lexer.Char)
-		error(lexer, lexer.Char)
+		tok = NewToken(ERROR, lexer.Char)
+		Error(lexer, lexer.Char)
 	}
 
-	lexer.readChar()
+	lexer.ReadChar()
 	return tok
 }

@@ -3,33 +3,49 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"plutonium/lexer"
 )
 
-func main() {
+func GetInputFilePath() (string, error) {
 	if len(os.Args) < 2 {
-		fmt.Println("Please provide a file name.")
-		return
+		return "", fmt.Errorf("%v: fatal error: no input files provided", strings.Join(strings.Split(os.Args[0], "./"), ""))
 	}
+	return os.Args[1], nil
+}
 
-	file, err := os.Open(os.Args[1])
+func ReadFileContent(filePath string) (string, error) {
+	file, err := os.Open(filePath)
 	if err != nil {
-		fmt.Println("Error opening file:", err)
-		return
+		return "", fmt.Errorf("error opening file: %w", err)
 	}
 	defer file.Close()
 
 	content, err := os.ReadFile(file.Name())
 	if err != nil {
-		fmt.Println("Error reading file:", err)
+		return "", fmt.Errorf("error reading file: %w", err)
+	}
+
+	return string(content), nil
+}
+func main() {
+	filePath, err := GetInputFilePath()
+	if err != nil {
+		fmt.Println(err)
 		return
 	}
 
-	lexerNew := lexer.New(string(content))
+	content, err := ReadFileContent(filePath)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	newLexer := lexer.New(string(content))
 
 	for {
-		tok := lexerNew.Consume()
+		tok := newLexer.Consume()
 		fmt.Printf("{Token Type: %v, Value: %v}\n", tok.Type, tok.Literal)
 		if tok.Type == lexer.EOF {
 			break
